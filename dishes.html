@@ -698,6 +698,75 @@
         }
         var savedSize = localStorage.getItem('fontSize') || 'medium';
         document.body.classList.add(savedSize);
+
+        // ============ CHINESE TRANSLATIONS ============
+        var lang = localStorage.getItem('language') || 'en';
+        if (lang === 'zh') {
+            document.querySelector('header h1').textContent = "Eli的中餐外卖";
+            document.querySelector('header h4').textContent = "欢迎来到Eli的中餐外卖，这是唯一一家不存在但我们正在努力让它存在的中餐外卖。";
+            document.querySelectorAll('nav a')[0].textContent = "首页";
+            document.querySelectorAll('nav a')[1].textContent = "菜单";
+            document.querySelectorAll('nav a')[2].textContent = "设置";
+            document.querySelectorAll('nav a')[3].textContent = "会员";
+            document.querySelector('.content h2').textContent = "菜单";
+            document.querySelector('.content p').textContent = "以下是菜品及价格：";
+            document.getElementById('searchBox').placeholder = "搜索菜品...";
+            document.querySelector('.cart h3').textContent = "🛒 购物车";
+            document.querySelector('.checkout-btn').textContent = "结账";
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn')[0].textContent = "全部";
+            document.querySelectorAll('.filter-btn')[1].textContent = "🥬 素食";
+            document.querySelectorAll('.filter-btn')[2].textContent = "🦐 海鲜";
+            document.querySelectorAll('.filter-btn')[3].textContent = "🥩 肉类";
+            document.querySelectorAll('.filter-btn')[4].textContent = "🌶️ 辣";
+
+            // Section titles
+            document.getElementById('starters').textContent = "开胃菜:";
+            document.getElementById('maincourses').textContent = "主菜:";
+            document.getElementById('desserts').textContent = "甜点:";
+            document.getElementById('drinks').textContent = "饮料:";
+
+            // Starters
+            document.querySelector('#cabbage h4').textContent = "炒白菜";
+            document.querySelector('#prawn h4').textContent = "醋溜虾";
+            document.querySelector('#brocolli h4').textContent = "西兰花炒虾";
+            document.querySelector('#softegg h4').textContent = "贻贝蛋";
+            document.querySelector('#pakchoi h4').textContent = "炒小白菜";
+            document.querySelector('#smallegg h4').textContent = "蜜汁鹌鹑蛋";
+            document.querySelector('#kale h4').textContent = "脆羽衣甘蓝";
+            document.querySelector('#cellery h4').textContent = "蘑菇芹菜";
+            document.querySelector('#kimchi h4').textContent = "泡菜豆腐";
+
+            // Main courses
+            document.querySelector('#waryu h4').textContent = "和牛牛排";
+            document.querySelector('#monkfish h4').textContent = "东方安康鱼";
+            document.querySelector('#lamb h4').textContent = "屠夫羊肉";
+            document.querySelector('#tuna h4').textContent = "蛋香金枪鱼";
+            document.querySelector('#chicken h4').textContent = "分而治之鸡";
+            document.querySelector('#aubergine h4').textContent = "香辣茄子";
+            document.querySelector('#fishtoful h4').textContent = "全鱼";
+            document.querySelector('#mussel h4').textContent = "绳养贻贝";
+            document.querySelector('#meatballsoup h4').textContent = "冬日肉丸汤";
+
+            // Desserts
+            document.querySelector('#tiramisu h4').textContent = "提拉米苏";
+            document.querySelector('#matcha h4').textContent = "抹茶包";
+            document.querySelector('#blackpudding h4').textContent = "黑布丁";
+
+            // Drinks
+            document.querySelector('#coca-cola h4').textContent = "可口可乐";
+            document.querySelector('#fanta h4').textContent = "芬达";
+            document.querySelector('#sprite h4').textContent = "雪碧";
+            document.querySelector('#beer h4').textContent = "啤酒";
+
+            // Add to cart buttons
+            document.querySelectorAll('.add-btn').forEach(function(btn) {
+                if (btn.textContent === 'Add to Cart') {
+                    btn.textContent = "加入购物车";
+                }
+            });
+        }
     </script>
 </body>
 </html>
