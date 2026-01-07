@@ -1,0 +1,703 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        body.dark {
+            background-color: #222;
+            color: white;
+        }
+
+        body.dark .card {
+            background-color: #333;
+        }
+
+        body.small { font-size: 14px; }
+        body.medium { font-size: 16px; }
+        body.large { font-size: 20px; }
+
+        header {
+            background-color: #9356f5;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        nav a:hover {
+            color: yellow;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 180px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100px;
+            background-color: #ccc;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .card h4 {
+            margin: 10px 0 5px 0;
+            font-size: 14px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #9356f5;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background-color: #9356f5;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background-color: #7a3ed4;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            margin-bottom: 20px;
+        }
+
+        #searchBox {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #9356f5;
+            color: white;
+            border-color: #9356f5;
+        }
+
+        /* Cart */
+        .cart {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        body.dark .cart {
+            background-color: #333;
+            border-color: #555;
+        }
+
+        .cart h3 {
+            margin-top: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #9356f5;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #9356f5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background-color: #7a3ed4;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Eli's Chinese Takeaway</h1>
+        <h4>Welcome to Eli's Chinese Takeaway, the only Chinese Takeaway which does not exist but we are trying to make it exist.</h4>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="dishes.html">Dishes</a>
+        <a href="settings.html">Settings</a>
+        <a href="membership.html">Membership</a>
+    </nav>
+
+    <!-- Shopping Cart -->
+    <div class="cart" id="cart">
+        <h3>🛒 Cart</h3>
+        <div id="cart-items"></div>
+        <div class="cart-total">Total: £<span id="cart-total">0.00</span></div>
+        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+    </div>
+
+    <main class="content">
+        <h2>Dishes</h2>
+        <p>Here is a list of dishes with prices:</p>
+
+        <!-- Search and Filter -->
+        <div class="search-filter">
+            <input type="text" id="searchBox" placeholder="Search dishes...">
+            <br><br>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="vegetarian">🥬 Vegetarian</button>
+            <button class="filter-btn" data-filter="seafood">🦐 Seafood</button>
+            <button class="filter-btn" data-filter="meat">🥩 Meat</button>
+            <button class="filter-btn" data-filter="spicy">🌶️ Spicy</button>
+        </div>
+
+        <!-- Starters -->
+        <h3 class="section-title" id="starters">Starters:</h3>
+        <div class="card-container">
+            <div class="card" id="cabbage" data-category="vegetarian" data-price="4.99">
+                <img src="/image/cabbage.jpg" alt="Stir fried Chinese cabbage">
+                <h4>Stir fried Chinese cabbage</h4>
+                <p>£4.99</p>
+                <div class="stars">
+                    <span onclick="rate('cabbage', 1)">☆</span>
+                    <span onclick="rate('cabbage', 2)">☆</span>
+                    <span onclick="rate('cabbage', 3)">☆</span>
+                    <span onclick="rate('cabbage', 4)">☆</span>
+                    <span onclick="rate('cabbage', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Stir fried Chinese cabbage', 4.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="prawn" data-category="seafood" data-price="5.99">
+                <img src="/image/prawn.jpg" alt="Fried prawns with vinegar sauce">
+                <h4>Fried prawns with vinegar sauce</h4>
+                <p>£5.99</p>
+                <div class="stars">
+                    <span onclick="rate('prawn', 1)">☆</span>
+                    <span onclick="rate('prawn', 2)">☆</span>
+                    <span onclick="rate('prawn', 3)">☆</span>
+                    <span onclick="rate('prawn', 4)">☆</span>
+                    <span onclick="rate('prawn', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Fried prawns', 5.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="brocolli" data-category="seafood vegetarian" data-price="6.99">
+                <img src="/image/brocolli.jpg" alt="Sauteed broccoli with prawns">
+                <h4>Sauteed broccoli with prawns</h4>
+                <p>£6.99</p>
+                <div class="stars">
+                    <span onclick="rate('brocolli', 1)">☆</span>
+                    <span onclick="rate('brocolli', 2)">☆</span>
+                    <span onclick="rate('brocolli', 3)">☆</span>
+                    <span onclick="rate('brocolli', 4)">☆</span>
+                    <span onclick="rate('brocolli', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Sauteed broccoli with prawns', 6.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="softegg" data-category="seafood" data-price="11.99">
+                <img src="/image/softegg.jpg" alt="The mussel eggs">
+                <h4>The mussel eggs</h4>
+                <p>£11.99</p>
+                <div class="stars">
+                    <span onclick="rate('softegg', 1)">☆</span>
+                    <span onclick="rate('softegg', 2)">☆</span>
+                    <span onclick="rate('softegg', 3)">☆</span>
+                    <span onclick="rate('softegg', 4)">☆</span>
+                    <span onclick="rate('softegg', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The mussel eggs', 11.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="pakchoi" data-category="vegetarian" data-price="6.99">
+                <img src="/image/pakchoi.jpg" alt="Stir fried Pak choi">
+                <h4>Stir fried Pak choi</h4>
+                <p>£6.99</p>
+                <div class="stars">
+                    <span onclick="rate('pakchoi', 1)">☆</span>
+                    <span onclick="rate('pakchoi', 2)">☆</span>
+                    <span onclick="rate('pakchoi', 3)">☆</span>
+                    <span onclick="rate('pakchoi', 4)">☆</span>
+                    <span onclick="rate('pakchoi', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Stir fried Pak choi', 6.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="smallegg" data-category="vegetarian" data-price="11.99">
+                <img src="/image/smallegg.jpg" alt="Honey-fried quail eggs">
+                <h4>Honey-fried quail eggs</h4>
+                <p>£11.99</p>
+                <div class="stars">
+                    <span onclick="rate('smallegg', 1)">☆</span>
+                    <span onclick="rate('smallegg', 2)">☆</span>
+                    <span onclick="rate('smallegg', 3)">☆</span>
+                    <span onclick="rate('smallegg', 4)">☆</span>
+                    <span onclick="rate('smallegg', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Honey-fried quail eggs', 11.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="kale" data-category="vegetarian" data-price="4.99">
+                <img src="/image/kale.jpg" alt="Kale crisps">
+                <h4>Kale crisps</h4>
+                <p>£4.99</p>
+                <div class="stars">
+                    <span onclick="rate('kale', 1)">☆</span>
+                    <span onclick="rate('kale', 2)">☆</span>
+                    <span onclick="rate('kale', 3)">☆</span>
+                    <span onclick="rate('kale', 4)">☆</span>
+                    <span onclick="rate('kale', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Kale crisps', 4.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="cellery" data-category="vegetarian" data-price="4.99">
+                <img src="/image/cellery.jpg" alt="Mushroom celery">
+                <h4>Mushroom celery</h4>
+                <p>£4.99</p>
+                <div class="stars">
+                    <span onclick="rate('cellery', 1)">☆</span>
+                    <span onclick="rate('cellery', 2)">☆</span>
+                    <span onclick="rate('cellery', 3)">☆</span>
+                    <span onclick="rate('cellery', 4)">☆</span>
+                    <span onclick="rate('cellery', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Mushroom celery', 4.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="kimchi" data-category="vegetarian spicy" data-price="10.99">
+                <img src="/image/kimchi.jpg" alt="Kimchi tofu">
+                <h4>Kimchi tofu</h4>
+                <p>£10.99</p>
+                <div class="stars">
+                    <span onclick="rate('kimchi', 1)">☆</span>
+                    <span onclick="rate('kimchi', 2)">☆</span>
+                    <span onclick="rate('kimchi', 3)">☆</span>
+                    <span onclick="rate('kimchi', 4)">☆</span>
+                    <span onclick="rate('kimchi', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Kimchi tofu', 10.99)">Add to Cart</button>
+            </div>
+        </div>
+
+        <h3 class="section-title" id="maincourses">Main Courses:</h3>
+        <div class="card-container">
+            <div class="card" id="waryu" data-category="meat" data-price="19.99">
+                <img src="/image/waryu.jpg" alt="Wagyu beef steak">
+                <h4>Wagyu beef steak</h4>
+                <p>£19.99</p>
+                <div class="stars">
+                    <span onclick="rate('waryu', 1)">☆</span>
+                    <span onclick="rate('waryu', 2)">☆</span>
+                    <span onclick="rate('waryu', 3)">☆</span>
+                    <span onclick="rate('waryu', 4)">☆</span>
+                    <span onclick="rate('waryu', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Wagyu beef steak', 19.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="monkfish" data-category="seafood" data-price="14.99">
+                <img src="/image/monkfish.jpg" alt="Oriental Monkfish">
+                <h4>Oriental Monkfish</h4>
+                <p>£14.99</p>
+                <div class="stars">
+                    <span onclick="rate('monkfish', 1)">☆</span>
+                    <span onclick="rate('monkfish', 2)">☆</span>
+                    <span onclick="rate('monkfish', 3)">☆</span>
+                    <span onclick="rate('monkfish', 4)">☆</span>
+                    <span onclick="rate('monkfish', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Oriental Monkfish', 14.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="lamb" data-category="meat spicy" data-price="16.99">
+                <img src="/image/lamb.jpg" alt="The butcher's lamb">
+                <h4>The butcher's lamb</h4>
+                <p>£16.99</p>
+                <div class="stars">
+                    <span onclick="rate('lamb', 1)">☆</span>
+                    <span onclick="rate('lamb', 2)">☆</span>
+                    <span onclick="rate('lamb', 3)">☆</span>
+                    <span onclick="rate('lamb', 4)">☆</span>
+                    <span onclick="rate('lamb', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The butchers lamb', 16.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="tuna" data-category="seafood" data-price="14.99">
+                <img src="/image/tuna.jpg" alt="The eggy tuna">
+                <h4>The eggy tuna</h4>
+                <p>£14.99</p>
+                <div class="stars">
+                    <span onclick="rate('tuna', 1)">☆</span>
+                    <span onclick="rate('tuna', 2)">☆</span>
+                    <span onclick="rate('tuna', 3)">☆</span>
+                    <span onclick="rate('tuna', 4)">☆</span>
+                    <span onclick="rate('tuna', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The eggy tuna', 14.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="chicken" data-category="meat" data-price="29.99">
+                <img src="/image/chicken.jpg" alt="Divide and conquer chicken">
+                <h4>Divide and conquer chicken</h4>
+                <p>£29.99</p>
+                <div class="stars">
+                    <span onclick="rate('chicken', 1)">☆</span>
+                    <span onclick="rate('chicken', 2)">☆</span>
+                    <span onclick="rate('chicken', 3)">☆</span>
+                    <span onclick="rate('chicken', 4)">☆</span>
+                    <span onclick="rate('chicken', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Divide and conquer chicken', 29.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="aubergine" data-category="vegetarian spicy" data-price="14.99">
+                <img src="/image/aubergine.jpg" alt="The dirty Aubergine">
+                <h4>The dirty Aubergine</h4>
+                <p>£14.99</p>
+                <div class="stars">
+                    <span onclick="rate('aubergine', 1)">☆</span>
+                    <span onclick="rate('aubergine', 2)">☆</span>
+                    <span onclick="rate('aubergine', 3)">☆</span>
+                    <span onclick="rate('aubergine', 4)">☆</span>
+                    <span onclick="rate('aubergine', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The dirty Aubergine', 14.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="fishtoful" data-category="seafood" data-price="19.99">
+                <img src="/image/fishtoful.jpg" alt="The full fish">
+                <h4>The full fish</h4>
+                <p>£19.99</p>
+                <div class="stars">
+                    <span onclick="rate('fishtoful', 1)">☆</span>
+                    <span onclick="rate('fishtoful', 2)">☆</span>
+                    <span onclick="rate('fishtoful', 3)">☆</span>
+                    <span onclick="rate('fishtoful', 4)">☆</span>
+                    <span onclick="rate('fishtoful', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The full fish', 19.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="mussel" data-category="seafood" data-price="21.99">
+                <img src="/image/mussel.jpg" alt="Rope grown mussels">
+                <h4>Rope grown mussels</h4>
+                <p>£21.99</p>
+                <div class="stars">
+                    <span onclick="rate('mussel', 1)">☆</span>
+                    <span onclick="rate('mussel', 2)">☆</span>
+                    <span onclick="rate('mussel', 3)">☆</span>
+                    <span onclick="rate('mussel', 4)">☆</span>
+                    <span onclick="rate('mussel', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Rope grown mussels', 21.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="meatballsoup" data-category="meat" data-price="16.99">
+                <img src="/image/meatballsoup.jpg" alt="The winter broth">
+                <h4>The winter broth</h4>
+                <p>£16.99</p>
+                <div class="stars">
+                    <span onclick="rate('meatballsoup', 1)">☆</span>
+                    <span onclick="rate('meatballsoup', 2)">☆</span>
+                    <span onclick="rate('meatballsoup', 3)">☆</span>
+                    <span onclick="rate('meatballsoup', 4)">☆</span>
+                    <span onclick="rate('meatballsoup', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('The winter broth', 16.99)">Add to Cart</button>
+            </div>
+        </div>
+
+        <h3 class="section-title" id="desserts">Desserts:</h3>
+        <div class="card-container">
+            <div class="card" id="tiramisu" data-category="vegetarian" data-price="6.99">
+                <img src="/image/tiramisu.jpg" alt="Dish">
+                <h4>Tiramisu</h4>
+                <p>£6.99</p>
+                <div class="stars">
+                    <span onclick="rate('tiramisu', 1)">☆</span>
+                    <span onclick="rate('tiramisu', 2)">☆</span>
+                    <span onclick="rate('tiramisu', 3)">☆</span>
+                    <span onclick="rate('tiramisu', 4)">☆</span>
+                    <span onclick="rate('tiramisu', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Tiramisu', 6.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="matcha" data-category="vegetarian" data-price="9.99">
+                <img src="/image/matcha.jpg" alt="Dish">
+                <h4>Matcha Bun</h4>
+                <p>£9.99</p>
+                <div class="stars">
+                    <span onclick="rate('matcha', 1)">☆</span>
+                    <span onclick="rate('matcha', 2)">☆</span>
+                    <span onclick="rate('matcha', 3)">☆</span>
+                    <span onclick="rate('matcha', 4)">☆</span>
+                    <span onclick="rate('matcha', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Matcha Bun', 9.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="blackpudding" data-category="meat" data-price="4.99">
+                <img src="/image/blackpudding.jpg" alt="Dish">
+                <h4>Black Pudding</h4>
+                <p>£4.99</p>
+                <div class="stars">
+                    <span onclick="rate('blackpudding', 1)">☆</span>
+                    <span onclick="rate('blackpudding', 2)">☆</span>
+                    <span onclick="rate('blackpudding', 3)">☆</span>
+                    <span onclick="rate('blackpudding', 4)">☆</span>
+                    <span onclick="rate('blackpudding', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Black Pudding', 4.99)">Add to Cart</button>
+            </div>
+        </div>
+
+        <h3 class="section-title" id="drinks">Drinks:</h3>
+        <div class="card-container">
+            <div class="card" id="coca-cola" data-category="drinks" data-price="5.99">
+                <img src="https://images.unsplash.com/photo-1554866585-cd94860890b7?w=150&h=150&fit=crop" alt="Coca-cola">
+                <h4>Coca-cola</h4>
+                <p>£5.99</p>
+                <div class="stars">
+                    <span onclick="rate('coca-cola', 1)">☆</span>
+                    <span onclick="rate('coca-cola', 2)">☆</span>
+                    <span onclick="rate('coca-cola', 3)">☆</span>
+                    <span onclick="rate('coca-cola', 4)">☆</span>
+                    <span onclick="rate('coca-cola', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Coca-cola', 5.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="fanta" data-category="drinks" data-price="5.99">
+                <img src="https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=150&h=150&fit=crop" alt="Fanta">
+                <h4>Fanta</h4>
+                <p>£5.99</p>
+                <div class="stars">
+                    <span onclick="rate('fanta', 1)">☆</span>
+                    <span onclick="rate('fanta', 2)">☆</span>
+                    <span onclick="rate('fanta', 3)">☆</span>
+                    <span onclick="rate('fanta', 4)">☆</span>
+                    <span onclick="rate('fanta', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Fanta', 5.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="sprite" data-category="drinks" data-price="5.99">
+                <img src="https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=150&h=150&fit=crop" alt="Sprite">
+                <h4>Sprite</h4>
+                <p>£5.99</p>
+                <div class="stars">
+                    <span onclick="rate('sprite', 1)">☆</span>
+                    <span onclick="rate('sprite', 2)">☆</span>
+                    <span onclick="rate('sprite', 3)">☆</span>
+                    <span onclick="rate('sprite', 4)">☆</span>
+                    <span onclick="rate('sprite', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Sprite', 5.99)">Add to Cart</button>
+            </div>
+            <div class="card" id="beer" data-category="drinks" data-price="5.99">
+                <img src="https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=150&h=150&fit=crop" alt="Beer">
+                <h4>Beer</h4>
+                <p>£5.99</p>
+                <div class="stars">
+                    <span onclick="rate('beer', 1)">☆</span>
+                    <span onclick="rate('beer', 2)">☆</span>
+                    <span onclick="rate('beer', 3)">☆</span>
+                    <span onclick="rate('beer', 4)">☆</span>
+                    <span onclick="rate('beer', 5)">☆</span>
+                </div>
+                <button class="add-btn" onclick="addToCart('Beer', 5.99)">Add to Cart</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ============ STAR RATINGS ============
+        function rate(dishId, rating) {
+            var card = document.getElementById(dishId);
+            var stars = card.querySelectorAll('.stars span');
+            for (var i = 0; i < stars.length; i++) {
+                if (i < rating) {
+                    stars[i].textContent = '⭐';
+                } else {
+                    stars[i].textContent = '☆';
+                }
+            }
+        }
+        // ============ SHOPPING CART ============
+        // This stores items in the cart
+        var cart = [];
+
+        // Add item to cart
+        function addToCart(name, price) {
+            cart.push({name: name, price: price});
+            updateCart();
+        }
+
+        // Remove item from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Update the cart display
+        function updateCart() {
+            var cartItems = document.getElementById('cart-items');
+            var cartTotal = document.getElementById('cart-total');
+            var total = 0;
+            
+            // Clear cart display
+            cartItems.innerHTML = '';
+            
+            // Add each item
+            for (var i = 0; i < cart.length; i++) {
+                total = total + cart[i].price;
+                cartItems.innerHTML += '<div class="cart-item">' +
+                    '<span>' + cart[i].name + '</span>' +
+                    '<span>£' + cart[i].price.toFixed(2) + 
+                    ' <button class="remove-btn" onclick="removeFromCart(' + i + ')">X</button></span>' +
+                    '</div>';
+            }
+            
+            // Update total
+            cartTotal.textContent = total.toFixed(2);
+        }
+
+        // Checkout button
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+            } else {
+                // Calculate total from cart items
+                var total = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    total = total + cart[i].price;
+                }
+                
+                // Add points (£1 = 1 point)
+                var earnedPoints = Math.floor(total);
+                var currentPoints = parseInt(localStorage.getItem('memberPoints')) || 0;
+                var newPoints = currentPoints + earnedPoints;
+                localStorage.setItem('memberPoints', newPoints);
+                
+                alert('Thank you for your order! Total: £' + total.toFixed(2) + '\nYou earned ' + earnedPoints + ' points!\nYour total points: ' + newPoints);
+                cart = [];
+                updateCart();
+            }
+        }
+
+        // ============ SEARCH ============
+        document.getElementById('searchBox').addEventListener('keyup', function() {
+            var searchText = this.value.toLowerCase();
+            var cards = document.querySelectorAll('.card');
+            
+            for (var i = 0; i < cards.length; i++) {
+                var dishName = cards[i].querySelector('h4').textContent.toLowerCase();
+                if (dishName.includes(searchText)) {
+                    cards[i].classList.remove('hidden');
+                } else {
+                    cards[i].classList.add('hidden');
+                }
+            }
+        });
+
+        // ============ FILTER BUTTONS ============
+        var filterButtons = document.querySelectorAll('.filter-btn');
+        
+        for (var i = 0; i < filterButtons.length; i++) {
+            filterButtons[i].addEventListener('click', function() {
+                // Remove active from all buttons
+                for (var j = 0; j < filterButtons.length; j++) {
+                    filterButtons[j].classList.remove('active');
+                }
+                // Add active to clicked button
+                this.classList.add('active');
+                
+                // Get filter type
+                var filter = this.getAttribute('data-filter');
+                var cards = document.querySelectorAll('.card');
+                
+                // Show/hide cards
+                for (var k = 0; k < cards.length; k++) {
+                    var category = cards[k].getAttribute('data-category') || '';
+                    if (filter === 'all' || category.includes(filter)) {
+                        cards[k].classList.remove('hidden');
+                    } else {
+                        cards[k].classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        // ============ SETTINGS (dark mode, font size) ============
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+        }
+        var savedSize = localStorage.getItem('fontSize') || 'medium';
+        document.body.classList.add(savedSize);
+    </script>
+</body>
+</html>
