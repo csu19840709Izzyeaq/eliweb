@@ -278,14 +278,49 @@
 
             // Redeem reward
             function redeem(cost, reward) {
+                var lang = localStorage.getItem('language') || 'en';
                 if (points >= cost) {
                     points = points - cost;
                     localStorage.setItem('memberPoints', points);
                     document.getElementById('points').textContent = points;
-                    alert('You redeemed: ' + reward + '!'+' Please screenshot this screen and show it to the staff to redeem your reward. :D');
+                    if (lang === 'zh') {
+                        alert('您兑换了: ' + reward + '! 请截图此页面并向工作人员展示以兑换奖励。:D');
+                    } else {
+                        alert('You redeemed: ' + reward + '! Please screenshot this screen and show it to the staff to redeem your reward. :D');
+                    }
                 } else {
-                    alert('Not enough points! You need ' + cost + ' points.');
+                    if (lang === 'zh') {
+                        alert('积分不足！您需要 ' + cost + ' 积分。');
+                    } else {
+                        alert('Not enough points! You need ' + cost + ' points.');
+                    }
                 }
+            }
+
+            // Chinese translations
+            var lang = localStorage.getItem('language') || 'en';
+            if (lang === 'zh') {
+                document.querySelector('header h1').textContent = "Eli的中餐外卖";
+                document.querySelector('header h4').textContent = "欢迎来到Eli的中餐外卖，这是唯一一家不存在但我们正在努力让它存在的中餐外卖。";
+                document.querySelectorAll('nav a')[0].textContent = "首页";
+                document.querySelectorAll('nav a')[1].textContent = "菜单";
+                document.querySelectorAll('nav a')[2].textContent = "设置";
+                document.querySelectorAll('nav a')[3].textContent = "会员";
+                document.querySelector('.content h2').textContent = "会员积分";
+                document.querySelector('.content p').textContent = "每消费£1即可获得1积分！";
+                document.querySelector('.points-display h3').innerHTML = "您的积分: <span id='points'>" + points + "</span>";
+                document.querySelectorAll('.content h3')[1].textContent = "奖励";
+                document.querySelectorAll('.card h4')[0].textContent = "🧋 免费饮料";
+                document.querySelectorAll('.card p')[0].textContent = "50 积分";
+                document.querySelectorAll('.card h4')[1].textContent = "🥟 免费前菜";
+                document.querySelectorAll('.card p')[1].textContent = "100 积分";
+                document.querySelectorAll('.card h4')[2].textContent = "🍜 免费主菜";
+                document.querySelectorAll('.card p')[2].textContent = "200 积分";
+                document.querySelectorAll('.card h4')[3].textContent = "🎉 双人免费餐";
+                document.querySelectorAll('.card p')[3].textContent = "500 积分";
+                document.querySelectorAll('.add-btn').forEach(function(btn) {
+                    btn.textContent = "兑换";
+                });
             }
         </script>
     </body>
